@@ -5,6 +5,7 @@
 #include <QObject>
 #include <QPushButton>
 
+#include "editform.h"
 #include "insertform.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -80,11 +81,16 @@ void MainWindow::ListContacts() {
         QPushButton* delete_row = new QPushButton("Delete", this);
         QHBoxLayout* pLayout = new QHBoxLayout(pWidget);
         pLayout->addWidget(delete_row);
+        tbl->setCellWidget(row_id, MainWindow::ColumnID::Delete, pWidget);
+        connect(delete_row, SIGNAL(clicked(bool)), this, SLOT(deleteThisRow()));
+
+        QPushButton* edit_row = new QPushButton("Edit", this);
+        pLayout->addWidget(edit_row);
         pLayout->setAlignment(Qt::AlignCenter);
         pLayout->setContentsMargins(0, 0, 0, 0);
         pWidget->setLayout(pLayout);
-        tbl->setCellWidget(row_id, MainWindow::ColumnID::Delete, pWidget);
-        connect(delete_row, SIGNAL(clicked(bool)), this, SLOT(deleteThisRow()));
+        tbl->setCellWidget(row_id, MainWindow::ColumnID::Edit, pWidget);
+        connect(edit_row, SIGNAL(clicked(bool)), this, SLOT(editThisRow()));
         row_id++;
     }
 }
@@ -133,6 +139,20 @@ void MainWindow::deleteThisRow() {
     }
 }
 
+void MainWindow::editThisRow() {
+    QTableWidget* tbl = ui->PhonebookViewTable;
+    QWidget* w = qobject_cast<QWidget*>(sender()->parent());
+    if (w) {
+        int row = tbl->indexAt(w->pos()).row();
+        std::string num =
+            tbl->item(row, MainWindow::ColumnID::Number)->text().toStdString();
+        EditForm* editForm = new EditForm(num, GetPBOperations(), this);
+        connect(editForm, SIGNAL(TriggerTableUpdate()), this,
+                SLOT(ReceiveTableUpdateTrigger()));
+        editForm->show();
+    }
+}
+
 void MainWindow::ReceiveTableUpdateTrigger() {
     ui->PhonebookViewTable->clear();
     ui->PhonebookViewTable->setRowCount(0);
@@ -144,4 +164,8 @@ void MainWindow::on_addButton_clicked() {
     connect(insForm, SIGNAL(TriggerTableUpdate()), this,
             SLOT(ReceiveTableUpdateTrigger()));
     insForm->show();
+}
+
+void MainWindow::on_closeMainButton_clicked() {
+    this->close();
 }

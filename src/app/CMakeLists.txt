@@ -3,6 +3,8 @@ qt_add_executable(phonebook
     mainwindow.cpp
     insertform.ui
     insertform.cpp
+    editform.ui
+    editform.cpp
     main.cpp
 )
 

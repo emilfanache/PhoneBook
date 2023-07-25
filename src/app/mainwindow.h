@@ -25,7 +25,8 @@ class MainWindow : public QMainWindow {
         Type,
         Nickname,
         Address,
-        Delete
+        Delete,
+        Edit
     };
 
     explicit MainWindow(QWidget* parent = nullptr);
@@ -38,9 +39,11 @@ class MainWindow : public QMainWindow {
 
  private slots:
     void deleteThisRow();
+    void editThisRow();
     void on_updateButton_clicked();
     void on_addButton_clicked();
     void ReceiveTableUpdateTrigger();
+    void on_closeMainButton_clicked();
 
  private:
     void MakeIteamReadOnly(QTableWidgetItem* item);

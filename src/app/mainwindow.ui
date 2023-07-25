@@ -94,6 +94,19 @@
      <string>Add Contact</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="closeMainButton">
+    <property name="geometry">
+     <rect>
+      <x>550</x>
+      <y>480</y>
+      <width>80</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Close</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
