@@ -23,6 +23,9 @@ class InsertForm : public QDialog {
     void on_closeButton_clicked();
     void on_okButton_clicked();
 
+ signals:
+    void TriggerTableUpdate();
+
  private:
     Ui::InsertForm* ui;
     std::shared_ptr<PBOperations> pb_operations_;

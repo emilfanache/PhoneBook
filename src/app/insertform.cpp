@@ -50,10 +50,6 @@ void InsertForm::on_okButton_clicked() {
     std::cout << local_contact << std::endl;
 
     pb_operations_->AddContact(local_contact);
-    // MainWindow* parent_w = qobject_cast<MainWindow*>(this->parent());
-    // std::cout << parent_w->ui->PhonebookViewTable->rowHeight();
+    emit TriggerTableUpdate();
     this->close();
-    // this->update();
-    // this->repaint();
-    // QCoreApplication::processEvents();
 }

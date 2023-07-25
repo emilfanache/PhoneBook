@@ -31,7 +31,7 @@ class MainWindow : public QMainWindow {
     explicit MainWindow(QWidget* parent = nullptr);
     ~MainWindow();
 
-    void ListContacts(std::vector<std::shared_ptr<Contact>>& all_contacts);
+    void ListContacts();
 
     void SetPBOperations(std::shared_ptr<PBOperations> oper);
     std::shared_ptr<PBOperations> GetPBOperations();
@@ -40,6 +40,7 @@ class MainWindow : public QMainWindow {
     void deleteThisRow();
     void on_updateButton_clicked();
     void on_addButton_clicked();
+    void ReceiveTableUpdateTrigger();
 
  private:
     void MakeIteamReadOnly(QTableWidgetItem* item);

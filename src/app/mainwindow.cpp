@@ -15,16 +15,9 @@
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
-    std::vector<std::shared_ptr<Contact>> all_contacts;
-
     ui->setupUi(this);
     SetPBOperations(std::make_shared<PBOperations>());
-    // ui->PhonebookViewTable->horizontalHeader()->setSectionResizeMode(
-    //     QHeaderView::Stretch);
-
-    ListContacts(all_contacts);
-    // QObject::connect(ui->updateButton, SIGNAL(clicked()), this,
-    //                  SLOT(on_updateButton_clicked()));
+    ListContacts();
 }
 
 MainWindow::~MainWindow() {
@@ -43,8 +36,8 @@ std::shared_ptr<PBOperations> MainWindow::GetPBOperations() {
     return pb_operations_;
 }
 
-void MainWindow::ListContacts(
-    std::vector<std::shared_ptr<Contact>>& all_contacts) {
+void MainWindow::ListContacts() {
+    std::vector<std::shared_ptr<Contact>> all_contacts;
     try {
         GetPBOperations()->GetAllContacts(&all_contacts);
         ui->PhonebookViewTable->setRowCount(all_contacts.size());
@@ -123,9 +116,6 @@ void MainWindow::on_updateButton_clicked() {
                               .HasPhoneType(type)
                               .HasNickname(nick)
                               .HasAddress(addr);
-
-        // std::cout << contact << std::endl;
-
         GetPBOperations()->UpdateContact(contact);
     }
 }
@@ -143,9 +133,15 @@ void MainWindow::deleteThisRow() {
     }
 }
 
+void MainWindow::ReceiveTableUpdateTrigger() {
+    ui->PhonebookViewTable->clear();
+    ui->PhonebookViewTable->setRowCount(0);
+    ListContacts();
+}
+
 void MainWindow::on_addButton_clicked() {
     InsertForm* insForm = new InsertForm(GetPBOperations(), this);
-    // insForm.setModal(true);
-    // insForm.exec();
+    connect(insForm, SIGNAL(TriggerTableUpdate()), this,
+            SLOT(ReceiveTableUpdateTrigger()));
     insForm->show();
 }
