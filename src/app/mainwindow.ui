@@ -59,6 +59,11 @@
          <string>Address</string>
         </property>
        </column>
+       <column>
+        <property name="text">
+         <string>Action</string>
+        </property>
+       </column>
       </widget>
      </item>
     </layout>
@@ -73,7 +78,20 @@
      </rect>
     </property>
     <property name="text">
-     <string>Update</string>
+     <string>Update Contacts</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="addButton">
+    <property name="geometry">
+     <rect>
+      <x>659</x>
+      <y>480</y>
+      <width>101</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Add Contact</string>
     </property>
    </widget>
   </widget>

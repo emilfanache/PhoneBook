@@ -7,7 +7,7 @@
 #include "pb_operations.hpp"
 
 const char PBOperations::db_name_[] =
-    "/home/emil/PhoneBook/db/phonebook.sqlite";
+    "/home/emil/repositories/PhoneBook/db/phonebook.sqlite";
 
 PBOperations::PBOperations() {
     int status = sqlite3_open(PBOperations::db_name_, &db_);
@@ -62,11 +62,10 @@ void PBOperations::UpdateContact(const Contact& contact) {
     }
 }
 
-void PBOperations::DeleteContact(const Contact& contact) {
+void PBOperations::DeleteContact(const std::string& num) {
     char* err_msg = nullptr;
 
-    std::string query =
-        "DELETE FROM Contacts where Number='" + contact.GetNumber() + "'";
+    std::string query = "DELETE FROM Contacts where Number='" + num + "'";
     // std::cout << "Query: " << query.c_str() << std::endl;
 
     int status = sqlite3_exec(db_, query.c_str(), nullptr, 0, &err_msg);

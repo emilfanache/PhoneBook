@@ -5,6 +5,7 @@
 #include <QObject>
 #include <QPushButton>
 
+#include "insertform.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -22,8 +23,8 @@ MainWindow::MainWindow(QWidget* parent)
     //     QHeaderView::Stretch);
 
     ListContacts(all_contacts);
-    QObject::connect(ui->updateButton, SIGNAL(clicked()), this,
-                     SLOT(on_updateButton_clicked()));
+    // QObject::connect(ui->updateButton, SIGNAL(clicked()), this,
+    //                  SLOT(on_updateButton_clicked()));
 }
 
 MainWindow::~MainWindow() {
@@ -68,15 +69,29 @@ void MainWindow::ListContacts(
             tbl->item(row_id, MainWindow::ColumnID::Number);
         MakeIteamReadOnly(item);
 
+        item = tbl->item(row_id, MainWindow::ColumnID::Type);
         tbl->setItem(row_id, MainWindow::ColumnID::Type,
                      new QTableWidgetItem(QString::fromStdString(
                          Contact::GetType(contact->GetType()))));
+        item = tbl->item(row_id, MainWindow::ColumnID::Type);
+        MakeIteamReadOnly(item);
+
         tbl->setItem(row_id, MainWindow::ColumnID::Nickname,
                      new QTableWidgetItem(
                          QString::fromStdString(contact->GetNickname())));
         tbl->setItem(row_id, MainWindow::ColumnID::Address,
                      new QTableWidgetItem(
                          QString::fromStdString(contact->GetAddress())));
+
+        QWidget* pWidget = new QWidget();
+        QPushButton* delete_row = new QPushButton("Delete", this);
+        QHBoxLayout* pLayout = new QHBoxLayout(pWidget);
+        pLayout->addWidget(delete_row);
+        pLayout->setAlignment(Qt::AlignCenter);
+        pLayout->setContentsMargins(0, 0, 0, 0);
+        pWidget->setLayout(pLayout);
+        tbl->setCellWidget(row_id, MainWindow::ColumnID::Delete, pWidget);
+        connect(delete_row, SIGNAL(clicked(bool)), this, SLOT(deleteThisRow()));
         row_id++;
     }
 }
@@ -113,4 +128,24 @@ void MainWindow::on_updateButton_clicked() {
 
         GetPBOperations()->UpdateContact(contact);
     }
+}
+
+void MainWindow::deleteThisRow() {
+    QTableWidget* tbl = ui->PhonebookViewTable;
+    QWidget* w = qobject_cast<QWidget*>(sender()->parent());
+    if (w) {
+        int row = tbl->indexAt(w->pos()).row();
+        std::string num =
+            tbl->item(row, MainWindow::ColumnID::Number)->text().toStdString();
+        GetPBOperations()->DeleteContact(num);
+        tbl->removeRow(row);
+        tbl->setCurrentCell(0, 0);
+    }
+}
+
+void MainWindow::on_addButton_clicked() {
+    InsertForm* insForm = new InsertForm(GetPBOperations(), this);
+    // insForm.setModal(true);
+    // insForm.exec();
+    insForm->show();
 }

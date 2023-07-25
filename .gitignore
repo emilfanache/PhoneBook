@@ -1,5 +1,7 @@
 # build directory
 build
+.vscode
+
 
 # C++ objects and libs
 *.slo
@@ -55,3 +57,12 @@ compile_commands.json
 *creator.user*
 
 *_qmlcache.qrc
+
+# qt local project
+*.cflags
+*.config
+*.creator
+*.cxxflags
+*.files
+*.includes
+

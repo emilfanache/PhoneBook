@@ -18,7 +18,15 @@ class MainWindow : public QMainWindow {
     Q_OBJECT
 
  public:
-    enum ColumnID { FirstName = 0, LastName, Number, Type, Nickname, Address };
+    enum ColumnID {
+        FirstName = 0,
+        LastName,
+        Number,
+        Type,
+        Nickname,
+        Address,
+        Delete
+    };
 
     explicit MainWindow(QWidget* parent = nullptr);
     ~MainWindow();
@@ -29,9 +37,9 @@ class MainWindow : public QMainWindow {
     std::shared_ptr<PBOperations> GetPBOperations();
 
  private slots:
-    //void on_PhonebookViewTable_itemDoubleClicked(QTableWidgetItem* item);
-
+    void deleteThisRow();
     void on_updateButton_clicked();
+    void on_addButton_clicked();
 
  private:
     void MakeIteamReadOnly(QTableWidgetItem* item);
