@@ -1,6 +1,7 @@
 #include <string>
 #include <utility>
 
+#include <QComboBox>
 #include <QDebug>
 #include <QObject>
 #include <QPushButton>
@@ -63,12 +64,15 @@ void MainWindow::ListContacts() {
             tbl->item(row_id, MainWindow::ColumnID::Number);
         MakeIteamReadOnly(item);
 
-        item = tbl->item(row_id, MainWindow::ColumnID::Type);
-        tbl->setItem(row_id, MainWindow::ColumnID::Type,
-                     new QTableWidgetItem(QString::fromStdString(
-                         Contact::GetType(contact->GetType()))));
-        item = tbl->item(row_id, MainWindow::ColumnID::Type);
-        MakeIteamReadOnly(item);
+        // type
+        QComboBox* typeBox = new QComboBox();
+        for (int pt = Contact::PhoneType::Home; pt <= Contact::PhoneType::Other;
+             pt++) {
+            typeBox->addItem(
+                Contact::GetType(static_cast<Contact::PhoneType>(pt)).c_str());
+        }
+        typeBox->setCurrentIndex(contact->GetType());
+        tbl->setCellWidget(row_id, MainWindow::ColumnID::Type, typeBox);
 
         tbl->setItem(row_id, MainWindow::ColumnID::Nickname,
                      new QTableWidgetItem(
@@ -107,15 +111,18 @@ void MainWindow::on_updateButton_clicked() {
                                  .toStdString();
         std::string num =
             tbl->item(row, MainWindow::ColumnID::Number)->text().toStdString();
-        std::string type_str =
-            tbl->item(row, MainWindow::ColumnID::Type)->text().toStdString();
+
+        // get type
+        QWidget* wdg = tbl->cellWidget(row, MainWindow::ColumnID::Type);
+        QComboBox* comboType = qobject_cast<QComboBox*>(wdg);
+        Contact::PhoneType type =
+            Contact::GetType(comboType->currentText().toStdString());
+
         std::string nick = tbl->item(row, MainWindow::ColumnID::Nickname)
                                ->text()
                                .toStdString();
         std::string addr =
             tbl->item(row, MainWindow::ColumnID::Address)->text().toStdString();
-
-        Contact::PhoneType type = Contact::GetType(type_str);
 
         Contact contact = Contact::Build(f_name, num)
                               .HasLastName(l_name)
