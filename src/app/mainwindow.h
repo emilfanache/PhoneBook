@@ -25,8 +25,8 @@ class MainWindow : public QMainWindow {
         Type,
         Nickname,
         Address,
-        Delete,
-        Edit
+        Actions,
+        ID
     };
 
     explicit MainWindow(QWidget* parent = nullptr);
@@ -35,7 +35,6 @@ class MainWindow : public QMainWindow {
     void ListContacts();
 
     void SetPBOperations(std::shared_ptr<PBOperations> oper);
-    std::shared_ptr<PBOperations> GetPBOperations();
 
  private slots:
     void deleteThisRow();
@@ -46,8 +45,6 @@ class MainWindow : public QMainWindow {
     void on_closeMainButton_clicked();
 
  private:
-    void MakeIteamReadOnly(QTableWidgetItem* item);
-
     Ui::MainWindow* ui;
     std::shared_ptr<PBOperations> pb_operations_;
 };

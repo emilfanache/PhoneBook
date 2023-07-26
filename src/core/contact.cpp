@@ -1,18 +1,25 @@
+#include <algorithm>
+
 #include "contact.hpp"
 #include "contact_builder.hpp"
 
 std::map<Contact::PhoneType, std::string> Contact::type_str_;
 
-Contact::Contact()
-    : first_name_(""),
-      last_name_(""),
-      number_(""),
-      type_(Contact::PhoneType::Mobile),
-      nickname_(""),
-      address_() {}
+Contact::Contact(const std::string& first_name, const std::string& number) {
+    if (number.empty()) {
+        throw(std::invalid_argument("Phone Number can not be empty!"));
+    }
 
-Contact::Contact(const std::string& first_name, const std::string& number)
-    : first_name_(first_name), number_(number) {
+    if (!std::all_of(number.begin(), number.end(), ::isdigit)) {
+        throw(std::invalid_argument("Phone Number can only contain numbers!"));
+    }
+
+    if (first_name.empty()) {
+        throw(std::invalid_argument("First Name can not be empty!"));
+    }
+
+    first_name_ = first_name;
+    number_ = number;
     SetTypeMap();
 }
 
@@ -22,7 +29,8 @@ ContactBuilder Contact::Build(const std::string& name,
 }
 
 std::ostream& operator<<(std::ostream& out, const Contact& rhs) {
-    out << "First name:  " << rhs.first_name_ << std::endl
+    out << "User ID:  " << rhs.user_id_ << std::endl
+        << "First name:  " << rhs.first_name_ << std::endl
         << "Last name:   " << rhs.last_name_ << std::endl
         << "Phone Number: " << rhs.number_ << std::endl
         << "Type:         " << rhs.type_ << std::endl
@@ -79,4 +87,8 @@ std::string Contact::GetNickname() const {
 
 std::string Contact::GetAddress() const {
     return address_;
+}
+
+int Contact::GetUserId() const {
+    return user_id_;
 }

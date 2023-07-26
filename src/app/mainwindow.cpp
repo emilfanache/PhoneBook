@@ -26,22 +26,14 @@ MainWindow::~MainWindow() {
     delete ui;
 }
 
-void MainWindow::MakeIteamReadOnly(QTableWidgetItem* item) {
-    item->setFlags(item->flags() ^ Qt::ItemIsEditable);
-}
-
 void MainWindow::SetPBOperations(std::shared_ptr<PBOperations> oper) {
     pb_operations_ = std::move(oper);
-}
-
-std::shared_ptr<PBOperations> MainWindow::GetPBOperations() {
-    return pb_operations_;
 }
 
 void MainWindow::ListContacts() {
     std::vector<std::shared_ptr<Contact>> all_contacts;
     try {
-        GetPBOperations()->GetAllContacts(&all_contacts);
+        pb_operations_->GetAllContacts(&all_contacts);
         ui->PhonebookViewTable->setRowCount(all_contacts.size());
     } catch (...) {
         return;
@@ -62,7 +54,6 @@ void MainWindow::ListContacts() {
         // make number column read only
         QTableWidgetItem* item =
             tbl->item(row_id, MainWindow::ColumnID::Number);
-        MakeIteamReadOnly(item);
 
         // type
         QComboBox* typeBox = new QComboBox();
@@ -83,18 +74,21 @@ void MainWindow::ListContacts() {
 
         QWidget* pWidget = new QWidget();
         QPushButton* delete_row = new QPushButton("Delete", this);
+        QPushButton* edit_row = new QPushButton("Edit", this);
         QHBoxLayout* pLayout = new QHBoxLayout(pWidget);
         pLayout->addWidget(delete_row);
-        tbl->setCellWidget(row_id, MainWindow::ColumnID::Delete, pWidget);
-        connect(delete_row, SIGNAL(clicked(bool)), this, SLOT(deleteThisRow()));
-
-        QPushButton* edit_row = new QPushButton("Edit", this);
         pLayout->addWidget(edit_row);
         pLayout->setAlignment(Qt::AlignCenter);
         pLayout->setContentsMargins(0, 0, 0, 0);
         pWidget->setLayout(pLayout);
-        tbl->setCellWidget(row_id, MainWindow::ColumnID::Edit, pWidget);
+        tbl->setCellWidget(row_id, MainWindow::ColumnID::Actions, pWidget);
+        connect(delete_row, SIGNAL(clicked(bool)), this, SLOT(deleteThisRow()));
         connect(edit_row, SIGNAL(clicked(bool)), this, SLOT(editThisRow()));
+
+        tbl->setItem(
+            row_id, MainWindow::ColumnID::ID,
+            new QTableWidgetItem(QString::number(contact->GetUserId())));
+        tbl->setColumnHidden(MainWindow::ColumnID::ID, true);
         row_id++;
     }
 }
@@ -123,13 +117,18 @@ void MainWindow::on_updateButton_clicked() {
                                .toStdString();
         std::string addr =
             tbl->item(row, MainWindow::ColumnID::Address)->text().toStdString();
+        bool ok;
+        int user_id =
+            tbl->item(row, MainWindow::ColumnID::ID)->text().toInt(&ok);
+        // TODO(emil): check Ok
 
         Contact contact = Contact::Build(f_name, num)
                               .HasLastName(l_name)
                               .HasPhoneType(type)
                               .HasNickname(nick)
-                              .HasAddress(addr);
-        GetPBOperations()->UpdateContact(contact);
+                              .HasAddress(addr)
+                              .HasUserId(user_id);
+        pb_operations_->UpdateContact(contact);
     }
 }
 
@@ -138,9 +137,11 @@ void MainWindow::deleteThisRow() {
     QWidget* w = qobject_cast<QWidget*>(sender()->parent());
     if (w) {
         int row = tbl->indexAt(w->pos()).row();
-        std::string num =
-            tbl->item(row, MainWindow::ColumnID::Number)->text().toStdString();
-        GetPBOperations()->DeleteContact(num);
+        bool ok;
+        int user_id =
+            tbl->item(row, MainWindow::ColumnID::ID)->text().toInt(&ok);
+        // TODO(emil): check Ok
+        pb_operations_->DeleteContact(user_id);
         tbl->removeRow(row);
         tbl->setCurrentCell(0, 0);
     }
@@ -151,9 +152,11 @@ void MainWindow::editThisRow() {
     QWidget* w = qobject_cast<QWidget*>(sender()->parent());
     if (w) {
         int row = tbl->indexAt(w->pos()).row();
-        std::string num =
-            tbl->item(row, MainWindow::ColumnID::Number)->text().toStdString();
-        EditForm* editForm = new EditForm(num, GetPBOperations(), this);
+        bool ok;
+        int user_id =
+            tbl->item(row, MainWindow::ColumnID::ID)->text().toInt(&ok);
+        // TODO(emil): check Ok
+        EditForm* editForm = new EditForm(user_id, pb_operations_, this);
         connect(editForm, SIGNAL(TriggerTableUpdate()), this,
                 SLOT(ReceiveTableUpdateTrigger()));
         editForm->show();
@@ -167,7 +170,7 @@ void MainWindow::ReceiveTableUpdateTrigger() {
 }
 
 void MainWindow::on_addButton_clicked() {
-    InsertForm* insForm = new InsertForm(GetPBOperations(), this);
+    InsertForm* insForm = new InsertForm(pb_operations_, this);
     connect(insForm, SIGNAL(TriggerTableUpdate()), this,
             SLOT(ReceiveTableUpdateTrigger()));
     insForm->show();

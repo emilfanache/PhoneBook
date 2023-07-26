@@ -4,9 +4,9 @@
 #include "pb_operations.hpp"
 #include "ui_editform.h"
 
-EditForm::EditForm(const std::string& number,
-                   std::shared_ptr<PBOperations> pb_operations, QWidget* parent)
-    : number_(number),
+EditForm::EditForm(int user_id, std::shared_ptr<PBOperations> pb_operations,
+                   QWidget* parent)
+    : user_id_(user_id),
       pb_operations_(pb_operations),
       QDialog(parent),
       ui(new Ui::EditForm) {
@@ -17,11 +17,11 @@ EditForm::EditForm(const std::string& number,
         ui->typeBoxEdit->addItem(
             Contact::GetType(static_cast<Contact::PhoneType>(pt)).c_str());
     }
-    std::shared_ptr<Contact> contact = pb_operations_->GetContact(number_);
+    std::shared_ptr<Contact> contact = pb_operations_->GetContact(user_id);
     ui->fnameInputEdit->setText(
         QString::fromStdString(contact->GetFirstName()));
     ui->lnameInputEdit->setText(QString::fromStdString(contact->GetLastName()));
-    ui->numROLabel->setText(QString::fromStdString(contact->GetNumber()));
+    ui->numberInputEdit->setText(QString::fromStdString(contact->GetNumber()));
     Contact::PhoneType type = contact->GetType();
     ui->typeBoxEdit->setCurrentIndex(type);
     ui->nicknameInputEdit->setText(
@@ -40,7 +40,7 @@ void EditForm::on_closeButtonEdit_clicked() {
 void EditForm::on_okButtonEdit_clicked() {
     std::string fname = ui->fnameInputEdit->text().toStdString();
     std::string lname = ui->lnameInputEdit->text().toStdString();
-    std::string num = ui->numROLabel->text().toStdString();
+    std::string num = ui->numberInputEdit->text().toStdString();
     std::string type_str = ui->typeBoxEdit->currentText().toStdString();
     Contact::PhoneType type = Contact::GetType(type_str);
     std::string nickname = ui->nicknameInputEdit->text().toStdString();
@@ -50,7 +50,8 @@ void EditForm::on_okButtonEdit_clicked() {
                                 .HasLastName(lname)
                                 .HasPhoneType(type)
                                 .HasNickname(nickname)
-                                .HasAddress(addr);
+                                .HasAddress(addr)
+                                .HasUserId(user_id_);
 
     std::cout << local_contact << std::endl;
 

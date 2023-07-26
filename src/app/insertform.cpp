@@ -28,10 +28,6 @@ void InsertForm::on_closeButton_clicked() {
     this->close();
 }
 
-std::shared_ptr<PBOperations> InsertForm::GetPBOperations() {
-    return pb_operations_;
-}
-
 void InsertForm::on_okButton_clicked() {
     std::string fname = ui->fnameInput->text().toStdString();
     std::string lname = ui->lnameInput->text().toStdString();
@@ -41,15 +37,25 @@ void InsertForm::on_okButton_clicked() {
     std::string nickname = ui->nicknameInput->text().toStdString();
     std::string addr = ui->addrInput->toPlainText().toStdString();
 
-    Contact local_contact = Contact::Build(fname, num)
-                                .HasLastName(lname)
-                                .HasPhoneType(type)
-                                .HasNickname(nickname)
-                                .HasAddress(addr);
+    try {
+        Contact local_contact = Contact::Build(fname, num)
+                                    .HasLastName(lname)
+                                    .HasPhoneType(type)
+                                    .HasNickname(nickname)
+                                    .HasAddress(addr);
 
-    std::cout << local_contact << std::endl;
-
-    pb_operations_->AddContact(local_contact);
+        // std::cout << local_contact << std::endl;
+        pb_operations_->AddContact(local_contact);
+    } catch (const std::runtime_error& e) {
+        ui->errorLabel->setText(QString::fromUtf8(e.what()));
+        return;
+    } catch (const std::invalid_argument& e) {
+        ui->errorLabel->setText(QString::fromUtf8(e.what()));
+        return;
+    } catch (...) {
+        ui->errorLabel->setText(QString::fromUtf8("General error!"));
+        return;
+    }
     emit TriggerTableUpdate();
     this->close();
 }

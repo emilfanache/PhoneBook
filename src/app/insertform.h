@@ -17,7 +17,6 @@ class InsertForm : public QDialog {
     InsertForm(std::shared_ptr<PBOperations> pb_operations,
                QWidget* parent = nullptr);
     ~InsertForm();
-    std::shared_ptr<PBOperations> GetPBOperations();
 
  private slots:
     void on_closeButton_clicked();

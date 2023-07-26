@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "contact_builder.hpp"
 
 ContactBuilder& ContactBuilder::HasLastName(const std::string& last_name) {
@@ -6,6 +8,15 @@ ContactBuilder& ContactBuilder::HasLastName(const std::string& last_name) {
 }
 
 ContactBuilder& ContactBuilder::HasNumber(const std::string& number) {
+    std::cout << "number:" << number.c_str() << std::endl;
+    if (number.empty()) {
+        throw(std::invalid_argument("Phone Number can not be empty!"));
+    }
+
+    if (!std::all_of(number.begin(), number.end(), ::isdigit)) {
+        throw(std::invalid_argument("Phone Number can only contain numbers!"));
+    }
+
     contact_.number_ = number;
     return *this;
 }
@@ -22,5 +33,10 @@ ContactBuilder& ContactBuilder::HasNickname(const std::string& nickname) {
 
 ContactBuilder& ContactBuilder::HasAddress(const std::string& address) {
     contact_.address_ = address;
+    return *this;
+}
+
+ContactBuilder& ContactBuilder::HasUserId(int user_id) {
+    contact_.user_id_ = user_id;
     return *this;
 }

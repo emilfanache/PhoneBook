@@ -16,7 +16,6 @@ class Contact {
     /* defined a public constructor that sets everything empty
      * in order to get the data from the db
      */
-    Contact();
     friend class ContactBuilder;
     friend std::ostream& operator<<(std::ostream& out, const Contact& rhs);
     static ContactBuilder Build(const std::string& name,
@@ -30,6 +29,7 @@ class Contact {
     static Contact::PhoneType GetType(const std::string& type);
     std::string GetNickname() const;
     std::string GetAddress() const;
+    int GetUserId() const;
 
  private:
     /* Make constructor private to enforce the setting by using
@@ -44,6 +44,7 @@ class Contact {
     Contact::PhoneType type_;
     std::string nickname_;
     std::string address_;
+    int user_id_;
     static std::map<Contact::PhoneType, std::string> type_str_;
 };
 

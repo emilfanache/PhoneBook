@@ -15,8 +15,7 @@ class EditForm : public QDialog {
     Q_OBJECT
 
  public:
-    explicit EditForm(const std::string& number,
-                      std::shared_ptr<PBOperations> pb_operations,
+    explicit EditForm(int user_id, std::shared_ptr<PBOperations> pb_operations,
                       QWidget* parent = nullptr);
     ~EditForm();
 
@@ -30,7 +29,7 @@ class EditForm : public QDialog {
  private:
     Ui::EditForm* ui;
     std::shared_ptr<PBOperations> pb_operations_;
-    std::string number_;
+    int user_id_;
 };
 
 #endif  // EDITFORM_H

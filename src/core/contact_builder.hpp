@@ -18,6 +18,7 @@ class ContactBuilder {
     ContactBuilder& HasPhoneType(Contact::PhoneType type);
     ContactBuilder& HasNickname(const std::string& nickname);
     ContactBuilder& HasAddress(const std::string& address);
+    ContactBuilder& HasUserId(int user_id);
 
     operator Contact() const { return std::move(contact_); }
 

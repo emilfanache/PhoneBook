@@ -24,8 +24,8 @@ class PBOperations {
     ~PBOperations();
 
     void AddContact(const Contact& contact);
-    void DeleteContact(const std::string& num);
-    std::shared_ptr<Contact> GetContact(const std::string& number);
+    void DeleteContact(int user_id);
+    std::shared_ptr<Contact> GetContact(int user_id);
     void GetAllContacts(std::vector<std::shared_ptr<Contact>>* all_contacts);
     unsigned int CountAllContacts();
     void UpdateContact(const Contact& contact);
