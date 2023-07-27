@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>928</width>
-    <height>710</height>
+    <width>891</width>
+    <height>603</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>PhoneBook</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QWidget" name="verticalLayoutWidget">
@@ -19,7 +19,7 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>931</width>
+      <width>891</width>
       <height>471</height>
      </rect>
     </property>
@@ -76,21 +76,21 @@
    <widget class="QPushButton" name="updateButton">
     <property name="geometry">
      <rect>
-      <x>789</x>
-      <y>480</y>
-      <width>121</width>
+      <x>600</x>
+      <y>530</y>
+      <width>171</width>
       <height>26</height>
      </rect>
     </property>
     <property name="text">
-     <string>Update Contacts</string>
+     <string>Update Contacts Inline</string>
     </property>
    </widget>
    <widget class="QPushButton" name="addButton">
     <property name="geometry">
      <rect>
-      <x>659</x>
-      <y>480</y>
+      <x>490</x>
+      <y>530</y>
       <width>101</width>
       <height>26</height>
      </rect>
@@ -102,14 +102,40 @@
    <widget class="QPushButton" name="closeMainButton">
     <property name="geometry">
      <rect>
-      <x>550</x>
-      <y>480</y>
-      <width>80</width>
+      <x>409</x>
+      <y>530</y>
+      <width>71</width>
       <height>26</height>
      </rect>
     </property>
     <property name="text">
      <string>Close</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="errorLabel">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>490</y>
+      <width>501</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="refreshButton">
+    <property name="geometry">
+     <rect>
+      <x>780</x>
+      <y>530</y>
+      <width>101</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Refresh</string>
     </property>
    </widget>
   </widget>
@@ -118,12 +144,22 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>928</width>
+     <width>891</width>
      <height>23</height>
     </rect>
    </property>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionNew_Contact">
+   <property name="text">
+    <string>New Contact</string>
+   </property>
+  </action>
+  <action name="actionClose_Window">
+   <property name="text">
+    <string>Close Window</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

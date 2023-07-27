@@ -47,13 +47,13 @@ void InsertForm::on_okButton_clicked() {
         // std::cout << local_contact << std::endl;
         pb_operations_->AddContact(local_contact);
     } catch (const std::runtime_error& e) {
-        ui->errorLabel->setText(QString::fromUtf8(e.what()));
+        MainWindow::PrintErrorLabel(ui->errorLabel, e.what());
         return;
     } catch (const std::invalid_argument& e) {
-        ui->errorLabel->setText(QString::fromUtf8(e.what()));
+        MainWindow::PrintErrorLabel(ui->errorLabel, e.what());
         return;
     } catch (...) {
-        ui->errorLabel->setText(QString::fromUtf8("General error!"));
+        MainWindow::PrintErrorLabel(ui->errorLabel, "General error!");
         return;
     }
     emit TriggerTableUpdate();

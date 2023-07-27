@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QLabel>
 #include <QMainWindow>
 #include <QTableWidgetItem>
 #include <memory>
@@ -33,8 +34,8 @@ class MainWindow : public QMainWindow {
     ~MainWindow();
 
     void ListContacts();
-
     void SetPBOperations(std::shared_ptr<PBOperations> oper);
+    static void PrintErrorLabel(QLabel* label, const char* err_str);
 
  private slots:
     void deleteThisRow();
@@ -43,6 +44,7 @@ class MainWindow : public QMainWindow {
     void on_addButton_clicked();
     void ReceiveTableUpdateTrigger();
     void on_closeMainButton_clicked();
+    void on_refreshButton_clicked();
 
  private:
     Ui::MainWindow* ui;

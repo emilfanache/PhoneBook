@@ -1,6 +1,7 @@
 #include "contact.hpp"
 #include "contact_builder.hpp"
 #include "editform.h"
+#include "mainwindow.h"
 #include "pb_operations.hpp"
 #include "ui_editform.h"
 
@@ -46,16 +47,26 @@ void EditForm::on_okButtonEdit_clicked() {
     std::string nickname = ui->nicknameInputEdit->text().toStdString();
     std::string addr = ui->addrInputEdit->toPlainText().toStdString();
 
-    Contact local_contact = Contact::Build(fname, num)
-                                .HasLastName(lname)
-                                .HasPhoneType(type)
-                                .HasNickname(nickname)
-                                .HasAddress(addr)
-                                .HasUserId(user_id_);
+    try {
+        Contact local_contact = Contact::Build(fname, num)
+                                    .HasLastName(lname)
+                                    .HasPhoneType(type)
+                                    .HasNickname(nickname)
+                                    .HasAddress(addr)
+                                    .HasUserId(user_id_);
 
-    std::cout << local_contact << std::endl;
-
-    pb_operations_->UpdateContact(local_contact);
+        //std::cout << local_contact << std::endl;
+        pb_operations_->UpdateContact(local_contact);
+    } catch (const std::runtime_error& e) {
+        MainWindow::PrintErrorLabel(ui->errorLabel, e.what());
+        return;
+    } catch (const std::invalid_argument& e) {
+        MainWindow::PrintErrorLabel(ui->errorLabel, e.what());
+        return;
+    } catch (...) {
+        MainWindow::PrintErrorLabel(ui->errorLabel, "General error!");
+        return;
+    }
     emit TriggerTableUpdate();
     this->close();
 }

@@ -12,7 +12,9 @@ const char PBOperations::db_name_[] =
 PBOperations::PBOperations() {
     int status = sqlite3_open(PBOperations::db_name_, &db_);
     if (status) {
-        std::cout << "Error opening DB: " << sqlite3_errmsg(db_) << std::endl;
+        std::string err_msg =
+            "Error opening DB: " + std::string(sqlite3_errmsg(db_));
+        throw(std::runtime_error(err_msg));
     }
 }
 
@@ -49,6 +51,17 @@ void PBOperations::AddContact(const Contact& contact) {
 
 void PBOperations::UpdateContact(const Contact& contact) {
     char* err_msg = nullptr;
+
+    /* Make sure that the new number we set doesn't already exists
+     * in a different record in the db. Use the current id to exclude
+     * from the search the current contact number.
+     */
+    unsigned int count_num =
+        CountContacts(contact.GetNumber(), contact.GetUserId());
+    if (count_num > 0) {
+        throw(std::invalid_argument("Number " + contact.GetNumber() +
+                                    " already exists in the database!"));
+    }
     std::string query =
         "UPDATE Contacts SET FirstName='" + contact.GetFirstName() + "', " +
         "LastName='" + contact.GetLastName() + "', " + "Number='" +
@@ -81,14 +94,14 @@ int PBOperations::CountCallback(void* count, int argc, char** argv,
                                 char** col_names) {
     unsigned int* cnt = reinterpret_cast<unsigned int*>(count);
     *cnt = atoi(argv[0]);
-    // std::cout << *cnt << std::endl;
     return 0;
 }
 
 unsigned int PBOperations::CountContacts(const std::string& number) {
     char* err_msg = nullptr;
     unsigned int count = 0;
-    std::string query = "SELECT * FROM Contacts where Number='" + number + "'";
+    std::string query =
+        "SELECT COUNT(*) FROM Contacts where Number='" + number + "'";
 
     int status =
         sqlite3_exec(db_, query.c_str(), CountCallback, &count, &err_msg);
@@ -98,14 +111,31 @@ unsigned int PBOperations::CountContacts(const std::string& number) {
                                  number);
     }
 
-    std::cout << query.c_str() << " | result=" << count << std::endl;
+    return count;
+}
+
+unsigned int PBOperations::CountContacts(const std::string& number,
+                                         int exclude_id) {
+    char* err_msg = nullptr;
+    unsigned int count = 0;
+    std::string query = "SELECT COUNT(*) FROM Contacts where Number='" +
+                        number + "' AND Id!=" + std::to_string(exclude_id);
+
+    int status =
+        sqlite3_exec(db_, query.c_str(), CountCallback, &count, &err_msg);
+    if (status != SQLITE_OK) {
+        sqlite3_free(err_msg);
+        throw std::runtime_error("Error counting contacts for number " +
+                                 number);
+    }
+
     return count;
 }
 
 unsigned int PBOperations::CountAllContacts() {
     char* err_msg = nullptr;
     unsigned int count = 0;
-    std::string query = "SELECT * FROM Contacts";
+    std::string query = "SELECT COUNT(*) FROM Contacts";
 
     int status =
         sqlite3_exec(db_, query.c_str(), CountCallback, &count, &err_msg);

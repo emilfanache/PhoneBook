@@ -36,6 +36,7 @@ class PBOperations {
     static int CountCallback(void* count, int argc, char** argv,
                              char** col_name);
     unsigned int CountContacts(const std::string& number);
+    unsigned int CountContacts(const std::string& number, int exclude_id);
 
     sqlite3* db_;
 };

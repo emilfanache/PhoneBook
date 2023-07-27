@@ -8,7 +8,6 @@ ContactBuilder& ContactBuilder::HasLastName(const std::string& last_name) {
 }
 
 ContactBuilder& ContactBuilder::HasNumber(const std::string& number) {
-    std::cout << "number:" << number.c_str() << std::endl;
     if (number.empty()) {
         throw(std::invalid_argument("Phone Number can not be empty!"));
     }
