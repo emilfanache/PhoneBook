@@ -6,8 +6,7 @@
 #include "contact_builder.hpp"
 #include "pb_operations.hpp"
 
-const char PBOperations::db_name_[] =
-    "/home/emil/repositories/PhoneBook/db/phonebook.sqlite";
+const char PBOperations::db_name_[] = "../db/phonebook.sqlite";
 
 PBOperations::PBOperations() {
     int status = sqlite3_open(PBOperations::db_name_, &db_);

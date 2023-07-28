@@ -1,6 +1,6 @@
 John|Walker|514514514|1|Jwalk|1234 Avenue Boot, H1S 118, Montreal, Quebec
-Sammy|Jhonson|5235346535|2|Samantha|42432 Avenue Venue, H12 222, Montreal, Quebec
+Samantha|Jhonson|5235346535|2|Sammy|42432 Avenue Venue, H12 222, Montreal, Quebec
 Dan|Thomas|8675309|0|Tommy|3050 Avenue Van Horne, H3S 1R2, Montreal, Quebec
-Michael|Steinberg|989898989898|2|Samantha|2070 Abel Street, J21 321, Montreal, Quebec
+Michael|Steinberg|989898989898|2|Mike|2070 Abel Street, J21 321, Montreal, Quebec
 
 
