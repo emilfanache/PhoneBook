@@ -114,7 +114,7 @@ if __name__ == '__main__':
     parser.add_option("-r", "--records",
                     dest = "records_fname",
                     default = None,
-                    help = "Add records in the db read from external file",
+                    help = "The external file from where you wnat to read the records",
                     metavar = "FILE")
     parser.add_option('-n', dest = 'num',
                         type = 'int',
