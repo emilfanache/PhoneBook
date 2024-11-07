@@ -11,8 +11,6 @@ Cmake 3.20 (or later)<br/>
 Sqlite3 (libsqlite3-dev) <br/>
 
 For Qt: <br/>
-qt5-base-dev<br/>
-qtbase5-dev-tools<br/>
 qt6-base-dev<br/>
 qtbase6-dev-tools<br/>
 
