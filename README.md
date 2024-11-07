@@ -12,7 +12,7 @@ Sqlite3 (libsqlite3-dev) <br/>
 
 For Qt: <br/>
 qt6-base-dev<br/>
-qtbase6-dev-tools<br/>
+qt6-tools-dev<br/>
 
 For the database generator script:<br/>
 Python 3.10.12<br/>
